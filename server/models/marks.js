@@ -10,7 +10,7 @@ const marksSchema = new mongoose.Schema({
         default:0,
     },
     ideation:{
-        type:String,
+        type:Number,
         default:0,
     },
     execution:{
