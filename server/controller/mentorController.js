@@ -37,7 +37,7 @@ exports.addStudents = async (req, res) => {
       });
     }
 
-    await Student.updateMany({ _id: { $in: students } }, { assigned: true });
+    await Student.updateMany({ _id: { $in: students } }, { assigned: true },{mentorId:mentorId});
 
     mentor.student.push(...students);
     await mentor.save();

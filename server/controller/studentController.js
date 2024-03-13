@@ -86,3 +86,30 @@ exports.addMarksOrUpdate = async (req, res) => {
     console.log("error while adding marks");
   }
 };
+
+exports.fetchMyStudents = async(req,res)=>{
+    try{
+        const {mentorId} = req.body;
+        if(!mentorId){
+            return res.status(400).json({
+                success:false,
+                message:"Mentor id is not present."
+            })
+        }
+
+        const mentor = await Mentor.findById(mentorId);
+        if(!mentor){
+            console.log("mentor is not found");
+            return res.status(400).json({message:"mentor is not present in db"});
+        }
+
+        return res.status(200).json({
+            student:mentor.student,
+            message:"students fetched successfully"
+        })
+
+    }catch(error){
+        console.log(error.message);
+        console.log("error while fetching my Students");
+    }
+}
