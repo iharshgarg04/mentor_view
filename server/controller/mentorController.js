@@ -19,6 +19,13 @@ exports.addStudents = async (req, res) => {
       });
     }
 
+    if(mentor.locked===true){
+        return res.status(400).json({
+            success:false,
+            message:"You have already submited the evaluation. You can no longer do changes"
+        })
+    }
+
     const currentCount = mentor.student.length;
     const newCount = currentCount + students.length;
     console.log(currentCount, newCount);
@@ -56,6 +63,13 @@ exports.removeStudent = async (req, res) => {
       });
     }
 
+    if(mentor.locked===true){
+        return res.status(400).json({
+            success:false,
+            message:"You have already submited the evaluation. You can no longer do changes"
+        })
+    }
+
     await Student.findByIdAndUpdate(
       studentId,
       { assigned: false },
@@ -77,5 +91,28 @@ exports.removeStudent = async (req, res) => {
     console.log(error.message);
   }
 };
+
+exports.submitAdmin = async(req,res)=>{
+    try{
+        const {mentorId} = req.body;
+        const mentor = await Mentor.findById(mentorId);
+        if (!mentor) {
+            return res.status(400).json({
+              success: false,
+              message: "mentor is not found",
+            });
+        }
+        mentor.locked = true;
+        await mentor.save();
+        return res.status(200).json({
+            success: true,
+            message: "Marks locked successfully",
+            mentor: mentor,
+        });
+    }catch(error){
+        console.log(error.message);
+        console.log("error while submiting");
+    }
+}
 
 

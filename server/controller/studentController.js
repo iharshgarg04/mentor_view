@@ -1,4 +1,5 @@
 const Marks = require("../models/marks");
+const Mentor = require("../models/mentor");
 const Student = require("../models/student");
 
 exports.fetchStudents = async (req, res) => {
@@ -24,6 +25,7 @@ exports.addMarksOrUpdate = async (req, res) => {
   try {
     const {
       studentId,
+      mentorId,
       viva,
       ideation,
       execution,
@@ -39,6 +41,21 @@ exports.addMarksOrUpdate = async (req, res) => {
       !teamWork
     ) {
       return res.status(400).send("All fields are requires");
+    }
+
+    const mentor = await Mentor.findById(mentorId);
+    if (!mentor) {
+      return res.status(400).json({
+        success: false,
+        message: "mentor not found",
+      });
+    }
+
+    if(mentor.locked===true){
+        return res.status(400).json({
+            success:false,
+            message:"You have already submited the evaluation. You can no longer do changes"
+        })
     }
 
     const totalMarks =
