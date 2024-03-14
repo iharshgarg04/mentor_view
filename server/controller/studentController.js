@@ -89,7 +89,7 @@ exports.addMarksOrUpdate = async (req, res) => {
 
 exports.fetchMyStudents = async(req,res)=>{
     try{
-        const {mentorId} = req.body;
+      const mentorId = req.headers.mentor
         if(!mentorId){
             return res.status(400).json({
                 success:false,
@@ -103,8 +103,10 @@ exports.fetchMyStudents = async(req,res)=>{
             return res.status(400).json({message:"mentor is not present in db"});
         }
 
+        const populatedMentor = await mentor.populate("student");
+
         return res.status(200).json({
-            student:mentor.student,
+            student:populatedMentor.student,
             message:"students fetched successfully"
         })
 
