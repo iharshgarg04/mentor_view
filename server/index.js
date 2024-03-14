@@ -35,5 +35,5 @@ connectDb();
 
 
 app.listen(PORT,()=>{
-    console.log(`server is successfully running ong port ${PORT}`);
+    console.log(`server is successfully running on port ${PORT}`);
 })

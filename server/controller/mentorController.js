@@ -2,6 +2,26 @@ const Marks = require("../models/marks");
 const Mentor = require("../models/mentor");
 const Student = require("../models/student");
 
+exports.fetchMentors = async(req,res)=>{
+  try{
+    const response = await Mentor.find({});
+    if(!response){
+      return res.status(400).json({
+        success:false,
+        message:"error while fetching mentors",
+      })
+
+    }
+    return res.status(200).json({
+      success:true,
+      mentors : response
+    })
+  }catch(error){
+    console.log(error.message);
+    console.log("error while fetching mentors");
+  }
+}
+
 exports.addStudents = async (req, res) => {
   try {
     const { students, mentorId } = req.body;
