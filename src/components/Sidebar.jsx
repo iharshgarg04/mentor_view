@@ -1,10 +1,16 @@
-import { Icon, IconButton } from '@mui/material'
+import { Button, Icon, IconButton } from '@mui/material'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router';
+import StudentList from './StudentList';
+import { useSelector } from 'react-redux';
+import { refreshSidebar } from '../features/refreshSlice';
 
 const Sidebar = () => {
     const [mystudents, setMystudents] = useState([]);
     const mentor = JSON.parse(localStorage.getItem("mentorData"));
+    const navigate = useNavigate();
+    const refresh = useSelector((state)=>state.refreshKey);
     useEffect(()=>{
         const fetchStudents = async()=>{
             try{
@@ -23,25 +29,22 @@ const Sidebar = () => {
             }
         }
         fetchStudents();
-    },[])
+    },[refresh])
   return (
     <div className='sidebar-container'>
         <div className='sidebar-header'>
             <h2>{mentor.name}</h2>
             <div>
-                <IconButton>
-                    <p>Add</p>
-                </IconButton>
-                <IconButton>
-                    <p>View</p>
-                </IconButton>
+                <Button sx={{color:"black",fontSize:"16px",fontWeight:"600"}} 
+                    onClick={()=>{
+                        navigate('Allstudents');
+                    }}
+                >Add</Button>
+                <Button sx={{color:"black",fontSize:"16px",fontWeight:"600"}}>view</Button>
             </div>
         </div>
-        <div className='sidebar-list'>
-            {mystudents.map((student,index)=>(
-                <div key={index} className='student-sidebar-list'>{student.name}</div>
-            ))}
-        </div>
+        {mystudents.length===0 ? <p className='no-student-text'>No students added yet click on Add button to start grading students</p> :
+        <StudentList mystudents={mystudents}/>}
     </div>
   )
 }
