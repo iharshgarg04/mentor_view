@@ -122,6 +122,12 @@ exports.submitAdmin = async(req,res)=>{
               message: "mentor is not found",
             });
         }
+        if(mentor.locked==true){
+          return res.status(400).json({
+            success:false,
+            message: "You have already submited the evaluation. You can no longer do changes"
+          })
+        }
         mentor.locked = true;
         await mentor.save();
         return res.status(200).json({
