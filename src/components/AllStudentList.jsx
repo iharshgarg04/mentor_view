@@ -8,9 +8,8 @@ import Checkbox from '@mui/material/Checkbox';
 import { useDispatch } from 'react-redux';
 import student, { setStudentData } from '../features/student';
 
-const AllStudentList = ({Students}) => {
+const AllStudentList = ({Students,checked,setChecked}) => {
     const dispatch = useDispatch();
-    const [checked, setChecked] = React.useState([]);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -24,6 +23,7 @@ const AllStudentList = ({Students}) => {
 
     setChecked(newChecked);
     dispatch(setStudentData(newChecked));
+    // setChecked([]);
     console.log(newChecked,"hii checked")
   };
 

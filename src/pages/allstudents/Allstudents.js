@@ -10,6 +10,7 @@ import {refreshSidebarfun } from "../../features/refreshSlice";
 
 const Allstudents = () => {
   const [Students, setStudents] = useState([]);
+  const [checked, setChecked] = React.useState([]);
   const dispatch = useDispatch();
   const studentData = useSelector((state) => state.studentKey);
   const refresh = useSelector((state)=>state.refreshKey);
@@ -37,6 +38,7 @@ const Allstudents = () => {
       if (response.status === 200) {
         dispatch(refreshSidebarfun());
         toast.success("students added successfully");
+        setChecked([]);
       }
     } catch (error) {
       toast.error("select min 3 and max 4 students");
@@ -64,7 +66,7 @@ const Allstudents = () => {
         />
       </Box>
       <div className="allstudent-list">
-        <AllStudentList Students={Students} />
+        <AllStudentList Students={Students} checked={checked} setChecked={setChecked} />
       </div>
       <Box
         sx={{
