@@ -1,70 +1,78 @@
-# Getting Started with Create React App
+# Getting Started with MentorView
+-This project provides a web-based solution for mentors to evaluate and manage students for a semester-long project in college. Mentors can add, edit, and remove assigned students, assign marks based on various parameters, and submit final marks.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Usage](#usage)
+- [Installation](#installation)
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Adding Students:
+- Mentors can add students they are interested in evaluating.
+- A mentor can accommodate a minimum of 3 and a maximum of 4 students at a time.
+- No two mentors can assign the same student during the evaluation period.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2. Assigning Marks:
+- Mentors can assign marks to each student based on parameters such as Ideation, Execution, Viva/Pitch, etc.
+- Total marks are visible to the mentor.
 
-### `npm test`
+3. Editing/Removing Students:
+- Mentors can edit/remove assigned students.
+- Mentors can also edit assigned marks for students.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+4. Final Submit:
+- Mentors can lock the marks of all students after submitting.
+- Marks cannot be edited after submission and lock.
+- If some students have unassigned marks, mentors cannot submit/lock the marks.
 
-### `npm run build`
+5. View Page:
+- Mentors have a view page to see all students and their assigned marks.
+- Filters are available to view students whose marks are yet to be assigned or already assigned.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Technologies Used
+- Node.js
+- Express.js
+- MongoDB
+- HTML/CSS
+- JavaScript
 
-### `npm run eject`
+## Usage
+- Register as a mentor and log in to the system.
+- Add students you wish to evaluate, ensuring the conditions are met (3-4 students per mentor, unique assignments).
+- Assign marks to each student based on the evaluation parameters.
+- Edit or remove students or marks as needed.
+- Submit final marks when ready. Marks will be locked after submission.
+- View all students and their marks, filtered by assignment status.
+ 
+ 
+## Installation
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+To run this project locally, follow these steps:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Clone the repository:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+   ```bash
+   git clone https://github.com/your-username/mentor-view-solution.git
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+2. Install dependencies:
 
-## Learn More
+    ```npm install 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. Set up the database and environment variables as described in the .env.example file.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. Go into server Directory and install dependencies:
+    
+    ```cd server
+        npm install
 
-### Code Splitting
+5. Set up environment variables as described in the .env.example file.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+6. start server
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    ```npm run start

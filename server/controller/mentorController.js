@@ -134,7 +134,7 @@ exports.submitAdmin = async(req,res)=>{
         if(students.length===0){
           return res.status(404).json({
             success:false,
-            message:"Add students before submit grading"
+            message:"Add students before submiting grading"
           })
         }
         const markspr = students.map(async(studentId)=>{

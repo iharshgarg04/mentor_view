@@ -81,7 +81,7 @@ const emailTemplate = (studentName, subject) => {
 				<p>Please review your marks. If you have any questions or concerns, feel free to reach out to your instructor.</p>
 			</div>
 			<div class="support">If you have any other questions or need assistance, please contact us at <a
-					href="mailto:info@Chatty.com">info@Chatty.com</a>.</div>
+					href="mailto:info@MentorView.com">info@MentorView.com</a>.</div>
 		</div>
 	</body>
 	
