@@ -62,17 +62,20 @@ To run this project locally, follow these steps:
 
 2. Install dependencies:
 
-    ```npm install 
+    ```bash
+    npm install 
 
 3. Set up the database and environment variables as described in the .env.example file.
 
 4. Go into server Directory and install dependencies:
     
-    ```cd server
-        npm install
+    ```bash
+    cd server
+    npm install
 
 5. Set up environment variables as described in the .env.example file.
 
 6. start server
 
-    ```npm run start
+    ```bash
+    npm run start
