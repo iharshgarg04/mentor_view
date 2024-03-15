@@ -31,7 +31,7 @@ const connectDb = async()=>{
 
 connectDb();
 
-// Student.create({name:"pratham",email:"gargn9039@gmail.com",mentorId:"65f1e6646ee41b32d05c0d16",totalMarks:0,assigned:true});
+// Student.create({name:"Ishika",email:"Ishika@gmail.com",mentorId:null,totalMarks:0,assigned:false});
 
 
 app.listen(PORT,()=>{
