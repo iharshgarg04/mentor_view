@@ -61,7 +61,7 @@ const Marks = () => {
   const handleSubmit=async()=>{
     try{
       setLoading(true);
-      const response = await axios.post("http://localhost:4000/student/marks",{
+      const response = await axios.post(`${process.env.REACT_APP_DEPLOYMENT_URL}/student/marks`,{
         studentId:student._id,
         mentorId:mentor._id,
         viva:marksval.viva,

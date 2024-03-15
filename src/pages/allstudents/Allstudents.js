@@ -19,7 +19,7 @@ const Allstudents = () => {
   useEffect(() => {
     const fetchAllStudents = async () => {
       setLoading(true);
-      const response = await axios.get("http://localhost:4000/student/");
+      const response = await axios.get(`${process.env.REACT_APP_DEPLOYMENT_URL}/student/`);
       setStudents(response.data.response);
       setLoading(false);
       // console.log(response, "hii all");
@@ -32,7 +32,7 @@ const Allstudents = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:4000/mentor/addStudents",
+        `${process.env.REACT_APP_DEPLOYMENT_URL}/mentor/addStudents`,
         {
           students: studentData.studentData,
           mentorId: mentor._id,
@@ -47,7 +47,7 @@ const Allstudents = () => {
       }
     } catch (error) {
       setLoading(false);
-      toast.error("select min 3 and max 4 students");
+      toast.error(error.response.data.message);
       console.log(error);
     }
   };
@@ -85,7 +85,7 @@ const Allstudents = () => {
         }}
       >
         <Button
-          sx={{ background: "#5c5470", color: "white" }}
+          sx={{ background: "#5c5470", color: "white",marginBottom:"25px" }}
           onClick={handleCreate}
           disabled={loading}
         >

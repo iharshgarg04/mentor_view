@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Icon, IconButton } from "@mui/material";
+import { Backdrop, Button, CircularProgress, Icon, IconButton } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -23,7 +23,7 @@ const Sidebar = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:4000/student/myStudents`,
+          `${process.env.REACT_APP_DEPLOYMENT_URL}/student/myStudents`,
           {
             headers: {
               mentor: mentor._id,
@@ -85,11 +85,16 @@ const Sidebar = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:4000/mentor/submit", {
-        mentorId: mentor._id,
-      });
+      setLoading(true);
+      const response = await axios.post(
+        `${process.env.REACT_APP_DEPLOYMENT_URL}/mentor/submit`,
+        {
+          mentorId: mentor._id,
+        }
+      );
       if (response.status === 200) {
         toast.success("marks locked successfully");
+        setLoading(false);
         markstudent.forEach((student) => {
           // console.log(student.mark,"Hii brother");
           generatePDF(student);
@@ -97,12 +102,19 @@ const Sidebar = () => {
         console.log(response);
       }
     } catch (error) {
+      setLoading(false);
       toast.error(error.response.data.message);
       console.log(error);
     }
   };
   return (
     <div className="sidebar-container">
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className="sidebar-header">
         <h2>{mentor.name}</h2>
         <div>
@@ -123,9 +135,7 @@ const Sidebar = () => {
         </div>
       </div>
       <div className="sidebar-header-title">My students</div>
-      {loading ? (
-        <CircularProgress sx={{alignSelf:"center"}} />
-      ) : mystudents.length === 0 ? (
+      {mystudents.length === 0 ? (
         <p className="no-student-text">
           No students added yet click on Add button to start grading students
         </p>

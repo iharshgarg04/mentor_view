@@ -15,7 +15,7 @@ const Marksheet = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          "http://localhost:4000/student/fetchMarks",
+          `${process.env.REACT_APP_DEPLOYMENT_URL}/student/fetchMarks`,
           {
             headers: {
               student: student._id,

@@ -1,6 +1,8 @@
 const Marks = require("../models/marks");
 const Mentor = require("../models/mentor");
 const Student = require("../models/student");
+const emailTemplate = require("../utils/emailTempelate");
+const mailSender = require("../utils/mailSender");
 
 exports.fetchMentors = async(req,res)=>{
   try{
@@ -40,7 +42,7 @@ exports.addStudents = async (req, res) => {
     }
 
     if(mentor.locked===true){
-        return res.status(400).json({
+        return res.status(404).json({
             success:false,
             message:"You have already submited the evaluation. You can no longer do changes"
         })
@@ -115,7 +117,7 @@ exports.removeStudent = async (req, res) => {
 exports.submitAdmin = async(req,res)=>{
     try{
         const {mentorId} = req.body;
-        const mentor = await Mentor.findById(mentorId);
+        const mentor = await Mentor.findById(mentorId).populate("student");
         if (!mentor) {
             return res.status(400).json({
               success: false,
@@ -135,11 +137,19 @@ exports.submitAdmin = async(req,res)=>{
             message:"Add students before submit grading"
           })
         }
-        // const markspr = students.map(async(studentId)=>{
-        //   const mark = await Marks.findOne({student:studentId}).populate("student").lean();
-        //   return { studentId, mark };
-        // })
-        // const studentMarks = await Promise.all(markspr);
+        const markspr = students.map(async(studentId)=>{
+          const mark = await Marks.findOne({student:studentId}).populate("student").lean();
+          return { studentId, mark };
+        })
+        const studentMarks = await Promise.all(markspr);
+        console.log(studentMarks);
+
+        for(let i =0;i<studentMarks.length;i++){
+          const response = await mailSender(studentMarks[i].studentId.email,"Uploaded Marks",emailTemplate(studentMarks[i].studentId.name,studentMarks[i].mark));
+          if(!response){
+            console.log("error while sending email");
+          }
+        }
 
         mentor.locked = true;
         await mentor.save();

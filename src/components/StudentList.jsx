@@ -19,7 +19,7 @@ const StudentList = ({ mystudents }) => {
     try {
       setLoading(true);
       const response = await axios.put(
-        "http://localhost:4000/mentor/removestudent",
+        `${process.env.REACT_APP_DEPLOYMENT_URL}/mentor/removestudent`,
         {
           mentorId: mentor._id,
           studentId: student._id,

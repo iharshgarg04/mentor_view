@@ -12,7 +12,7 @@ const View = () => {
   useEffect(() => {
     const fetchAllStudents = async () => {
       setLoading(true);
-      const response = await axios.get("http://localhost:4000/student/all");
+      const response = await axios.get(`${process.env.REACT_APP_DEPLOYMENT_URL}/student/all`);
       setStudents(response.data.response);
       console.log(response, "hii all");
       setLoading(false);

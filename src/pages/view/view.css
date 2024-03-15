@@ -10,7 +10,7 @@
 .view-header{
     display: flex;
     gap: 20px;
-    height: 6%;
+    height: 4rem;
 }
 .students-view-list{
  
