@@ -83,6 +83,15 @@ const Sidebar = () => {
       .download(studentData.studentId.name + "_report.pdf");
   };
 
+  useEffect(()=>{
+    console.log(markstudent,"New marks")
+    markstudent.forEach((student) => {
+      console.log(student);
+      // console.log(student.mark,"Hii brother");
+      generatePDF(student);
+    });
+  },[markstudent])
+
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -93,14 +102,10 @@ const Sidebar = () => {
         }
       );
       if (response.status === 200) {
+        console.log(response);
         setMarkstudent(response.data.studentMarks);
         toast.success("marks locked successfully");
         setLoading(false);
-        console.log(markstudent,"New marks")
-        markstudent.forEach((student) => {
-          // console.log(student.mark,"Hii brother");
-          generatePDF(student);
-        });
         console.log(response);
       }
     } catch (error) {
