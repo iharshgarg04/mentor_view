@@ -16,6 +16,10 @@ const studentSchema = new mongoose.Schema({
     assigned:{
         type:Boolean,
         default:false,
+    },
+    totalMarks:{
+        type:Number,
+        default:0
     }
 })
 
