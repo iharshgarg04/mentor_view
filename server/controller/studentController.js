@@ -20,6 +20,24 @@ exports.fetchStudents = async (req, res) => {
     console.log("error while fetching students");
   }
 };
+exports.fetchAllStudents = async(req,res)=>{
+  try {
+    const response = await Student.find({});
+    if (!response) {
+      res.status(400).json({
+        success: "false",
+        message: "error while fetching students",
+      });
+    }
+
+    res.status(200).json({
+      success: "true",
+      response,
+    });
+  } catch (error) {
+    console.log("error while fetching students");
+  }
+}
 
 exports.addMarksOrUpdate = async (req, res) => {
   try {
@@ -76,6 +94,8 @@ exports.addMarksOrUpdate = async (req, res) => {
         { new: true, upsert: true }
       ).populate("student");
 
+      const stuMarks = await Student.findByIdAndUpdate(studentId,{totalMarks:totalMarks});
+
     return res.status(200).json({
       success: true,
       message: "Marks are added successfully",
@@ -104,10 +124,17 @@ exports.fetchMyStudents = async(req,res)=>{
         }
 
         const populatedMentor = await mentor.populate("student");
+        const students = mentor.student
+        const markspr = students.map(async(studentId)=>{
+          const mark = await Marks.findOne({student:studentId}).populate("student").lean();
+          return { studentId, mark };
+        })
+        const studentMarks = await Promise.all(markspr);
 
         return res.status(200).json({
             student:populatedMentor.student,
-            message:"students fetched successfully"
+            message:"students fetched successfully",
+            studentMarks:studentMarks
         })
 
     }catch(error){
@@ -126,7 +153,7 @@ exports.fetchMarks = async(req,res)=>{
       }
       const student = await Marks.findOne({student:studentId});
       if(!student){
-        return res.status(400).json({
+        return res.status(200).json({
           success:false,
           message:"Marks are not assigned yet"
         })

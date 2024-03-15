@@ -57,7 +57,7 @@ exports.addStudents = async (req, res) => {
       });
     }
 
-    await Student.updateMany({ _id: { $in: students } }, { assigned: true },{mentorId:mentorId});
+    await Student.updateMany({ _id: { $in: students } },{ $set: { mentorId: mentorId,assigned: true } } ,{new:true});
 
     mentor.student.push(...students);
     await mentor.save();
@@ -92,7 +92,7 @@ exports.removeStudent = async (req, res) => {
 
     await Student.findByIdAndUpdate(
       studentId,
-      { assigned: false },
+      { assigned: false ,$unset: { mentorId: '' }},
       { new: true }
     );
     const response = await Mentor.findByIdAndUpdate(
@@ -128,6 +128,19 @@ exports.submitAdmin = async(req,res)=>{
             message: "You have already submited the evaluation. You can no longer do changes"
           })
         }
+        const students = mentor.student
+        if(students.length===0){
+          return res.status(404).json({
+            success:false,
+            message:"Add students before submit grading"
+          })
+        }
+        // const markspr = students.map(async(studentId)=>{
+        //   const mark = await Marks.findOne({student:studentId}).populate("student").lean();
+        //   return { studentId, mark };
+        // })
+        // const studentMarks = await Promise.all(markspr);
+
         mentor.locked = true;
         await mentor.save();
         return res.status(200).json({
