@@ -8,6 +8,7 @@
   background-color: #2a2438;
   padding: 25px 12px;
   gap: 20px;
+  justify-content: space-between;
 }
 .nav-mentor {
   color: white;
