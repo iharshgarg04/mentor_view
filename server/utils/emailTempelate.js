@@ -76,6 +76,7 @@ const emailTemplate = (studentName, subject) => {
 					${`<li> Ideation : ${subject.ideation}</li>`}
 					${`<li> team work : ${subject.teamWork}</li>`}
 					${`<li> project Management : ${subject.projectManagement}</li>`}
+					${`<li> total Marks : ${subject.totalMarks}</li>`}
 				</ul>
 				<p>Please review your marks. If you have any questions or concerns, feel free to reach out to your instructor.</p>
 			</div>
