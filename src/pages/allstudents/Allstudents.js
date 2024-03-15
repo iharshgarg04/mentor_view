@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./allstudents.css";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import axios from "axios";
 // import StudentList from "../../components/StudentList";
 import AllStudentList from "../../components/AllStudentList";
@@ -11,22 +11,26 @@ import {refreshSidebarfun } from "../../features/refreshSlice";
 const Allstudents = () => {
   const [Students, setStudents] = useState([]);
   const [checked, setChecked] = React.useState([]);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const studentData = useSelector((state) => state.studentKey);
   const refresh = useSelector((state)=>state.refreshKey);
   const mentor = JSON.parse(localStorage.getItem("mentorData"));
   useEffect(() => {
     const fetchAllStudents = async () => {
+      setLoading(true);
       const response = await axios.get("http://localhost:4000/student/");
       setStudents(response.data.response);
-      console.log(response, "hii all");
+      setLoading(false);
+      // console.log(response, "hii all");
     };
     fetchAllStudents();
-    console.log(studentData,"hi stu")
+    // console.log(studentData,"hi stu")
   }, [refresh]);
 
   const handleCreate = async () => {
     try {
+      setLoading(true);
       const response = await axios.post(
         "http://localhost:4000/mentor/addStudents",
         {
@@ -39,8 +43,10 @@ const Allstudents = () => {
         dispatch(refreshSidebarfun());
         toast.success("students added successfully");
         setChecked([]);
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       toast.error("select min 3 and max 4 students");
       console.log(error);
     }
@@ -66,7 +72,9 @@ const Allstudents = () => {
         />
       </Box>
       <div className="allstudent-list">
+        {loading ? <div className="circular-progress"><CircularProgress/></div>: 
         <AllStudentList Students={Students} checked={checked} setChecked={setChecked} />
+        }
       </div>
       <Box
         sx={{
@@ -79,6 +87,7 @@ const Allstudents = () => {
         <Button
           sx={{ background: "#5c5470", color: "white" }}
           onClick={handleCreate}
+          disabled={loading}
         >
           Add Students
         </Button>

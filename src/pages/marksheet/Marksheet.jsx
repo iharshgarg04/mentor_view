@@ -3,13 +3,17 @@ import "./marksheet.css";
 import { myContext } from "../dashBoard/DashBoard";
 import { useState } from "react";
 import axios from "axios";
+import { CircularProgress } from "@mui/material";
 
 const Marksheet = () => {
   const { student, setStudent } = useContext(myContext);
   const [marksheet, setMarksheet] = useState({});
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const fetchMarks = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           "http://localhost:4000/student/fetchMarks",
           {
@@ -21,8 +25,10 @@ const Marksheet = () => {
         if (response.status === 200) {
           console.log(response);
           setMarksheet(response.data.student);
+          setLoading(false);
         }
       } catch (error) {
+        setLoading(false);
         console.log(error.message);
       }
     };
@@ -34,6 +40,7 @@ const Marksheet = () => {
       <div>
         <h2>Marksheet</h2>
       </div>
+      {loading ? <CircularProgress className="circular-progress" /> : 
       <div className="marks-list">
         <p>Viva : {marksheet ?  marksheet.viva: "NA"}</p>
         <p>Ideation : {marksheet ?  marksheet.ideation: "NA"}</p>
@@ -42,6 +49,7 @@ const Marksheet = () => {
         <p>Team Work : {marksheet ?  marksheet.teamWork: "NA"}</p>
         <p>Total Marks : {marksheet ?  marksheet.totalMarks: "NA"}</p>
       </div>
+      }
     </div>
     <p className="add-marks-text">
       Click on the edit icon to edit or add marks for the student.

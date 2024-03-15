@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
+  CircularProgress,
   FormControl,
   InputLabel,
   OutlinedInput,
@@ -42,6 +43,7 @@ const marks = [
 
 const Marks = () => {
   const {student,setStudent} = useContext(myContext);
+  const [loading, setLoading] = useState(false);
   const [marksval, setMarksval] = useState({
     viva:0,
     execution:0,
@@ -58,7 +60,7 @@ const Marks = () => {
   }
   const handleSubmit=async()=>{
     try{
-      console.log(marksval)
+      setLoading(true);
       const response = await axios.post("http://localhost:4000/student/marks",{
         studentId:student._id,
         mentorId:mentor._id,
@@ -77,18 +79,26 @@ const Marks = () => {
           teamWork:0,
           ideation:0,
         })
+        setLoading(false);
       }
       console.log(response);
     }catch(error){
-      toast.error(error.response.data.message);
+      setLoading(false);
+      if(!student){
+        toast.error("click on add Marks again to continue")
+      }
+      else if(error && error.response.status===400){
+        toast.error( "enter all fields")
+      } 
       console.log(error);
     }
   }
   return (
     <div className="marks-container">
       <div className="marks-header">
-        <div className="marks-title">{student.name} marks form</div>
-        {marks.map((mark, index) => (
+        <div className="marks-title"> marks form</div>
+        {loading ? <CircularProgress className="circular-progress"/> :
+        marks.map((mark, index) => (
           <div className="marks-row">
             <FormControl sx={{width:"100%"}}>
               <InputLabel htmlFor={mark.id}>{mark.label}</InputLabel>
@@ -111,11 +121,13 @@ const Marks = () => {
               />
             </FormControl>
           </div>
-        ))}
+        ))
+        }
         <Button
           variant="contained"
           sx={{ backgroundColor: "black", padding: "10px 50px" }}
           onClick={handleSubmit}
+          disabled={loading}
         >
           Save
         </Button>

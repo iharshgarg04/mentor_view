@@ -1,4 +1,4 @@
-import { Button, Icon, IconButton } from "@mui/material";
+import { Button, CircularProgress, Icon, IconButton } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -13,13 +13,15 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const Sidebar = () => {
   const [mystudents, setMystudents] = useState([]);
-  const [markstudent,setMarkstudent] = useState([]);
+  const [markstudent, setMarkstudent] = useState([]);
+  const [loading, setLoading] = useState(false);
   const mentor = JSON.parse(localStorage.getItem("mentorData"));
   const navigate = useNavigate();
   const refresh = useSelector((state) => state.refreshKey);
   useEffect(() => {
     const fetchStudents = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           `http://localhost:4000/student/myStudents`,
           {
@@ -33,6 +35,7 @@ const Sidebar = () => {
           setMystudents(response.data.student);
           setMarkstudent(response.data.studentMarks);
           console.log(response, "hii students");
+          setLoading(false);
         }
       } catch (error) {
         console.log(error);
@@ -41,18 +44,30 @@ const Sidebar = () => {
     fetchStudents();
   }, [refresh]);
 
-  
   const generatePDF = async (studentData) => {
     const docDefinition = {
       content: [
         { text: "Student report", style: "header" },
         { text: "Name: " + studentData.studentId.name },
-        { text: "Viva: " + (studentData.mark ? studentData.mark.viva : 0)},
-        { text: "Execution: " + (studentData.mark ? studentData.mark.execution : 0)},
-        { text: "ideation: " + (studentData.mark ? studentData.mark.ideation : 0)},
-        { text: "Project Management: " + (studentData.mark ? studentData.mark.projectManagement : 0)},
-        { text: "Team Work: " + (studentData.mark ? studentData.mark.teamWork : 0)},
-        { text: "Total marks: " + studentData.studentId.totalMarks},
+        { text: "Viva: " + (studentData.mark ? studentData.mark.viva : 0) },
+        {
+          text:
+            "Execution: " + (studentData.mark ? studentData.mark.execution : 0),
+        },
+        {
+          text:
+            "ideation: " + (studentData.mark ? studentData.mark.ideation : 0),
+        },
+        {
+          text:
+            "Project Management: " +
+            (studentData.mark ? studentData.mark.projectManagement : 0),
+        },
+        {
+          text:
+            "Team Work: " + (studentData.mark ? studentData.mark.teamWork : 0),
+        },
+        { text: "Total marks: " + studentData.studentId.totalMarks },
       ],
       styles: {
         header: {
@@ -63,27 +78,29 @@ const Sidebar = () => {
       },
     };
 
-    pdfMake.createPdf(docDefinition).download(studentData.studentId.name + "_report.pdf");
+    pdfMake
+      .createPdf(docDefinition)
+      .download(studentData.studentId.name + "_report.pdf");
   };
 
-  const handleSubmit = async()=>{
-    try{
-        const response = await axios.post("http://localhost:4000/mentor/submit",{
-            mentorId:mentor._id
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post("http://localhost:4000/mentor/submit", {
+        mentorId: mentor._id,
+      });
+      if (response.status === 200) {
+        toast.success("marks locked successfully");
+        markstudent.forEach((student) => {
+          // console.log(student.mark,"Hii brother");
+          generatePDF(student);
         });
-        if(response.status===200){
-            toast.success("marks locked successfully");
-            markstudent.forEach((student) => {
-              // console.log(student.mark,"Hii brother");
-              generatePDF(student);
-            });
-            console.log(response);
-        }
-    }catch(error){
-        toast.error(error.response.data.message)
+        console.log(response);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
       console.log(error);
     }
-    }
+  };
   return (
     <div className="sidebar-container">
       <div className="sidebar-header">
@@ -97,23 +114,45 @@ const Sidebar = () => {
           >
             Add
           </Button>
-          <Button sx={{ color: "black", fontSize: "16px", fontWeight: "600" }} onClick={()=> navigate("view")}>
+          <Button
+            sx={{ color: "black", fontSize: "16px", fontWeight: "600" }}
+            onClick={() => navigate("view")}
+          >
             view
           </Button>
         </div>
       </div>
       <div className="sidebar-header-title">My students</div>
-      {mystudents.length === 0 ? (
+      {loading ? (
+        <CircularProgress sx={{alignSelf:"center"}} />
+      ) : mystudents.length === 0 ? (
         <p className="no-student-text">
           No students added yet click on Add button to start grading students
         </p>
       ) : (
         <StudentList mystudents={mystudents} />
       )}
-      <div style={{flex:"1.3",justifyContent:"center",alignItems:"center",display:"flex"}}>
-        <Button variant="contained" sx={{backgroundColor:"#31363F",'&:hover':{
-            backgroundColor:'grey'
-        }}} onClick={handleSubmit}>Submit grading</Button>
+      <div
+        style={{
+          flex: "1.3",
+          justifyContent: "center",
+          alignItems: "center",
+          display: "flex",
+        }}
+      >
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "#31363F",
+            "&:hover": {
+              backgroundColor: "grey",
+            },
+          }}
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          Submit grading
+        </Button>
       </div>
     </div>
   );
