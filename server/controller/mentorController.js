@@ -142,7 +142,7 @@ exports.submitAdmin = async(req,res)=>{
           return { studentId, mark };
         })
         const studentMarks = await Promise.all(markspr);
-        console.log(studentMarks);
+        // console.log(studentMarks);
 
         for(let i =0;i<studentMarks.length;i++){
           const response = await mailSender(studentMarks[i].studentId.email,"Uploaded Marks",emailTemplate(studentMarks[i].studentId.name,studentMarks[i].mark));
