@@ -157,6 +157,7 @@ exports.submitAdmin = async(req,res)=>{
             success: true,
             message: "Marks locked successfully",
             mentor: mentor,
+            studentMarks:studentMarks
         });
     }catch(error){
         console.log(error.message);

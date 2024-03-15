@@ -3,8 +3,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import StudentList from "./StudentList";
-import { useSelector } from "react-redux";
-import { refreshSidebar } from "../features/refreshSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { refreshSidebar, refreshSidebarfun } from "../features/refreshSlice";
 import { toast } from "react-toastify";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
@@ -15,6 +15,7 @@ const Sidebar = () => {
   const [mystudents, setMystudents] = useState([]);
   const [markstudent, setMarkstudent] = useState([]);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const mentor = JSON.parse(localStorage.getItem("mentorData"));
   const navigate = useNavigate();
   const refresh = useSelector((state) => state.refreshKey);
@@ -33,7 +34,6 @@ const Sidebar = () => {
         if (response.status === 200) {
           console.log(response);
           setMystudents(response.data.student);
-          setMarkstudent(response.data.studentMarks);
           console.log(response, "hii students");
           setLoading(false);
         }
@@ -93,8 +93,10 @@ const Sidebar = () => {
         }
       );
       if (response.status === 200) {
+        setMarkstudent(response.data.studentMarks);
         toast.success("marks locked successfully");
         setLoading(false);
+        console.log(markstudent,"New marks")
         markstudent.forEach((student) => {
           // console.log(student.mark,"Hii brother");
           generatePDF(student);
@@ -158,7 +160,10 @@ const Sidebar = () => {
               backgroundColor: "grey",
             },
           }}
-          onClick={handleSubmit}
+          onClick={()=>{
+            dispatch(refreshSidebarfun());
+            handleSubmit();
+          }}
           disabled={loading}
         >
           Submit grading
