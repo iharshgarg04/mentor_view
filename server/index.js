@@ -32,6 +32,7 @@ const connectDb = async()=>{
 connectDb();
 
 // Student.create({name:"Ishika",email:"Ishika@gmail.com",mentorId:null,totalMarks:0,assigned:false});
+// Mentor.create({name:"Shubham",student:[],locked:false});
 
 
 app.listen(PORT,()=>{
